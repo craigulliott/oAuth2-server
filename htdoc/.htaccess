@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# the routing for the API is very simple, and resolves to a static api class and a method 
+# API URIs take this form : /{api_endpoint}/{method_name}
+#
+# Note:: underscores are only alowed in the middle of classes and methods
+#        this allows namespacing to be used to hide methods from the api
+#        similarly, api classes are given the suffix _API, this ensures internal
+#        classes are not addressable from outside
+# 
+
+#### API METHODS
+
+# API methods without a method (the DEFAULT_API_METHOD from the configuration will be used)
+# we only re-write urls for content that doesn't actually exist in the public htdoc folder                                                                                        
+RewriteCond %{REQUEST_FILENAME} !-f                                                                                                                                   
+RewriteCond %{REQUEST_FILENAME} !-d     
+RewriteRule ^([a-zA-Z][a-zA-Z_]*[a-zA-Z])(|/)$ /api.php?endpoint=$1&%{QUERY_STRING} [L,QSA]
+
+# API methods with a method
+# we only re-write urls for content that doesn't actually exist in the public htdoc folder                                                                                        
+RewriteCond %{REQUEST_FILENAME} !-f                                                                                                                                   
+RewriteCond %{REQUEST_FILENAME} !-d     
+RewriteRule ^([a-zA-Z][a-zA-Z_]*[a-zA-Z])/([a-zA-Z][a-zA-Z_]*[a-zA-Z])(|/)$ /api.php?endpoint=$1&method=$2&%{QUERY_STRING} [L,QSA]
+
